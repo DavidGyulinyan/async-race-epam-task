@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Car, RaceStatus, EngineStatus } from '../types';
 import { apiService } from '../services/api';
+import { saveWinnerResult } from './winnersSlice';
 
 interface CarRaceState {
   id: number;
@@ -67,22 +68,35 @@ export const startDriving = createAsyncThunk(
 export const startRace = createAsyncThunk(
   'race/startRace',
   async (cars: Car[], { dispatch }) => {
-    const MILLISECONDS_TO_SECONDS = 1000;
     const finishTimes: { car: Car; time: number }[] = [];
 
-    // Start all engines
-    const enginePromises = cars.map(car => dispatch(startEngine(car.id)));
-    await Promise.all(enginePromises);
+    // Start all engines and collect their data
+    const engineResults = await Promise.all(
+      cars.map(async (car) => {
+        const result = await dispatch(startEngine(car.id)).unwrap();
+        return { car, velocity: result.velocity, distance: result.distance };
+      })
+    );
 
-    // Start driving for all cars and track completion times
+    // Start driving for all cars
     const drivePromises = cars.map(async (car) => {
-      const driveStartTime = Date.now();
-      await dispatch(startDriving(car.id)).unwrap();
-      const completionTime = (Date.now() - driveStartTime) / MILLISECONDS_TO_SECONDS;
-      finishTimes.push({ car, time: completionTime });
+      try {
+        await dispatch(startDriving(car.id)).unwrap();
+      } catch (error) {
+        // Car failed to start driving, but we'll still include it with its calculated time
+        console.warn(`Car ${car.id} failed to start driving:`, error);
+      }
     });
 
     await Promise.allSettled(drivePromises);
+
+    // Calculate completion times based on engine data
+    engineResults.forEach(({ car, velocity, distance }) => {
+      if (velocity > 0 && distance > 0) {
+        const time = (distance / velocity) / 1000;
+        finishTimes.push({ car, time });
+      }
+    });
 
     // Find the actual winner (fastest completion time)
     let winner: Car | null = null;
@@ -94,6 +108,11 @@ export const startRace = createAsyncThunk(
         winnerTime = time;
       }
     });
+
+    // Save winner result if there's a winner
+    if (winner && winnerTime !== Infinity) {
+      await dispatch(saveWinnerResult({ carId: (winner as Car).id, time: winnerTime }));
+    }
 
     return {
       winner,
@@ -195,6 +214,13 @@ const raceSlice = createSlice({
       // Start driving
       .addCase(startDriving.fulfilled, (state, action) => {
         const { carId } = action.payload;
+        const car = state.cars[carId];
+        if (car) {
+          car.isDriving = true;
+        }
+      })
+      .addCase(startDriving.rejected, (state, action) => {
+        const carId = action.meta.arg;
         const car = state.cars[carId];
         if (car) {
           car.isDriving = true;

@@ -19,6 +19,8 @@ import {
   resetRace,
   selectRaceStatus,
   selectRaceWinner,
+  selectRaceTime,
+  selectRaceCars,
   initializeCar,
 } from "../../store/raceSlice";
 import { saveWinnerResult } from "../../store/winnersSlice";
@@ -37,6 +39,8 @@ const Garage: React.FC = () => {
   const selectedCar = useAppSelector(selectSelectedCar);
   const raceStatus = useAppSelector(selectRaceStatus);
   const raceWinner = useAppSelector(selectRaceWinner);
+  const raceTime = useAppSelector(selectRaceTime);
+  const raceCars = useAppSelector(selectRaceCars);
 
   const [createCarName, setCreateCarName] = useState("");
   const [createCarColor, setCreateCarColor] = useState("#ff0000");
@@ -188,9 +192,9 @@ const Garage: React.FC = () => {
           </div>
         </div>
 
-        {raceWinner && raceStatus === RaceStatus.FINISHED && (
+        {raceWinner && raceStatus === RaceStatus.FINISHED && Object.values(raceCars).every(car => car.isFinished) && (
           <div className="garage__winner-banner">
-            🏆 Winner: {raceWinner.name}! 🏆
+            🏆 Winner: {raceWinner.name} - Time: {raceTime.toFixed(2)} seconds! 🏆
           </div>
         )}
 
