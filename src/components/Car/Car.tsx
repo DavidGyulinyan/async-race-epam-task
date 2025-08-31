@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   startEngine,
@@ -8,7 +8,7 @@ import {
   updateCarPosition,
   finishCar
 } from '../../store/raceSlice';
-import { deleteCar, setSelectedCar, updateCar } from '../../store/carsSlice';
+import { deleteCar, updateCar } from '../../store/carsSlice';
 import { Car as CarType } from '../../types';
 import './Car.css';
 
@@ -54,7 +54,6 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
 
   const handleStopEngine = async () => {
     try {
-      // Calculate current position before stopping
       if (startTimeRef.current && animationDuration > 0) {
         const elapsed = (Date.now() - startTimeRef.current) / 1000;
         const progress = Math.min(elapsed / animationDuration, 1);
@@ -63,36 +62,32 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
         dispatch(updateCarPosition({ carId: car.id, position: currentPosition }));
       }
 
-      // Cancel animation frame if running
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
 
       await dispatch(stopEngine(car.id)).unwrap();
-      // Don't reset animation duration immediately to allow for restart
       startTimeRef.current = null;
     } catch (error) {
       console.error('Failed to stop engine:', error);
     }
   };
 
-  const handleStartDriving = async () => {
+  const handleStartDriving = useCallback(async () => {
     if (!carRaceState?.isStarted) {
       return;
     }
-    
+
     try {
       await dispatch(startDriving(car.id)).unwrap();
     } catch (error) {
       console.error('Failed to start driving:', error);
     }
-  };
+  }, [carRaceState?.isStarted, dispatch, car.id]);
 
   const handleCarClick = () => {
-    if (carRaceState?.isStarted) {
-      return; // Don't allow color change during race
-    }
+    if (carRaceState?.isStarted) return;
     setShowColorPicker(!showColorPicker);
   };
 
@@ -109,39 +104,32 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
       setShowColorPicker(false);
     } catch (error) {
       console.error('Failed to update car color:', error);
-      setSelectedColor(car.color); // Revert on error
+      setSelectedColor(car.color);
     }
   };
 
   const handleColorPickerBlur = () => {
-    setTimeout(() => setShowColorPicker(false), 150); // Small delay to allow color selection
+    setTimeout(() => setShowColorPicker(false), 150);
   };
 
-  // Update selected color when car prop changes
   useEffect(() => {
     setSelectedColor(car.color);
   }, [car.color]);
 
-  // Auto-start driving when engine is started
   useEffect(() => {
     if (carRaceState?.isStarted && !carRaceState?.isDriving) {
-      // Start driving immediately without delay
       handleStartDriving();
     }
-  }, [carRaceState?.isStarted, carRaceState?.isDriving]);
+  }, [carRaceState?.isStarted, carRaceState?.isDriving, handleStartDriving]);
 
-  // Update animation duration from race state
   useEffect(() => {
     if (carRaceState?.time) {
-      // Ensure minimum animation duration for visibility
-      const minDuration = 2; // Minimum 2 seconds for better visibility
+      const minDuration = 2;
       const duration = Math.max(carRaceState.time, minDuration);
       setAnimationDuration(duration);
     } else if (!carRaceState?.isStarted) {
-      // Reset animation duration and position when engine is not started
       setAnimationDuration(0);
       setCurrentPosition(0);
-      // Cancel any ongoing animation
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
@@ -149,20 +137,16 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
     }
   }, [carRaceState?.time, carRaceState?.isStarted]);
 
-  // Start timing when driving begins (for stop position calculation)
   useEffect(() => {
     if (carRaceState?.isDriving && !carRaceState?.isStopped) {
-      // Start animation even if duration is not set yet (use fallback)
-      const currentDuration = animationDuration > 0 ? animationDuration : 2; // Fallback to 2 seconds
+      const currentDuration = animationDuration > 0 ? animationDuration : 2;
 
       if (!startTimeRef.current) {
         startTimeRef.current = Date.now();
-        // Start from stopped position if car was previously stopped, otherwise from 0
         const startPosition = carRaceState?.position || 0;
         setCurrentPosition(startPosition);
       }
 
-      // Start JavaScript animation
       const animate = () => {
   if (!startTimeRef.current || !trackRef.current || !carRef.current) return;
 
@@ -172,8 +156,7 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
   const trackWidth = trackRef.current.offsetWidth;
   const carWidth = carRef.current.offsetWidth;
 
-  // Calculate max distance in px
-  const maxDistance = trackWidth - carWidth - 20; 
+  const maxDistance = trackWidth - carWidth - 20;
 
   const newPositionPx = progress * maxDistance;
   setCurrentPosition(newPositionPx);
@@ -181,12 +164,11 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
   if (progress < 1) {
     animationRef.current = requestAnimationFrame(animate);
   } else {
-    setCurrentPosition(maxDistance); // ensure car ends at finish line
+    setCurrentPosition(maxDistance);
     dispatch(finishCar(car.id));
   }
 };
 
-      // Start animation immediately
       animationRef.current = requestAnimationFrame(animate);
     }
 
