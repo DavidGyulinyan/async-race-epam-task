@@ -1,13 +1,13 @@
 🏎️ Async Race
 
-Deployed UI: https://your-deployment-link.com
+Deployed UI: https://async-race-davit.netlify.app/garage
 
 Score: ___ / 400 pts (fill after self-check)
 
 ✅ Checklist (Self-Evaluation)
 🚀 UI Deployment
 
- UI deployed on GitHub Pages / Netlify / Vercel / Cloudflare Pages.
+ UI deployed on Netlify
 
  Deployment link added to README.md (top section).
 
