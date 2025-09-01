@@ -96,19 +96,6 @@
   font-size: 1rem;
 }
 
-.car-item__btn--reset {
-  background: #FF9800;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1rem;
-}
-
 .car-item__race-track {
   display: flex;
   align-items: center;
@@ -194,6 +181,10 @@
 .car-item__color-picker input[type="color"]::-webkit-color-swatch {
   border: none;
   border-radius: 4px;
+}
+
+.car-item__car--driving {
+  /* Animation is now handled by JavaScript */
 }
 
 .car-item__car--finished {
@@ -299,8 +290,7 @@
   }
 
   .car-item__btn--start,
-  .car-item__btn--stop,
-  .car-item__btn--reset {
+  .car-item__btn--stop {
     width: 35px;
     height: 35px;
     font-size: 0.9rem;

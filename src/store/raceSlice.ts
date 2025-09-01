@@ -121,27 +121,13 @@ export const startRace = createAsyncThunk(
   },
 );
 
-export const resetCar = createAsyncThunk(
-  'race/resetCar',
-  async (carId: number, { dispatch, getState }) => {
-    const state = getState() as { race: RaceState };
-    const car = state.race.cars[carId];
-
-    // Stop engine if it's started
-    if (car?.isStarted) {
-      await dispatch(stopEngine(carId)).unwrap();
-    }
-    return carId;
-  },
-);
-
 export const resetRace = createAsyncThunk(
   'race/resetRace',
   async (cars: Car[], { dispatch }) => {
     // Stop all engines
     const stopPromises = cars.map(car => dispatch(stopEngine(car.id)));
     await Promise.all(stopPromises);
-
+    
     return cars.map(car => car.id);
   },
 );
@@ -258,26 +244,12 @@ const raceSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message || 'Race failed';
       })
-      // Reset car
-      .addCase(resetCar.fulfilled, (state, action) => {
-        const carId = action.payload;
-        const car = state.cars[carId];
-        if (car) {
-          car.isStarted = false;
-          car.isDriving = false;
-          car.isFinished = false;
-          car.velocity = 0;
-          car.time = 0;
-          car.position = 0;
-          car.isStopped = false;
-        }
-      })
       // Reset race
       .addCase(resetRace.fulfilled, (state, action) => {
         state.status = RaceStatus.IDLE;
         state.winner = null;
         state.raceTime = 0;
-
+        
         action.payload.forEach(carId => {
           const car = state.cars[carId];
           if (car) {

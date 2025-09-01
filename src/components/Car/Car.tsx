@@ -6,8 +6,7 @@ import {
   startDriving,
   selectCarRaceState,
   updateCarPosition,
-  finishCar,
-  resetCar
+  finishCar
 } from '../../store/raceSlice';
 import { deleteCar, updateCar } from '../../store/carsSlice';
 import { Car as CarType } from '../../types';
@@ -72,21 +71,6 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
       startTimeRef.current = null;
     } catch (error) {
       console.error('Failed to stop engine:', error);
-    }
-  };
-
-  const handleResetCar = async () => {
-    try {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-      startTimeRef.current = null;
-      setCurrentPosition(0);
-
-      await dispatch(resetCar(car.id)).unwrap();
-    } catch (error) {
-      console.error('Failed to reset car:', error);
     }
   };
 
@@ -235,10 +219,10 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
           >
             A
           </button>
-          <button
-            className="car-item__btn car-item__btn--reset"
-            onClick={handleResetCar}
-            disabled={false}
+          <button 
+            className="car-item__btn car-item__btn--stop"
+            onClick={handleStopEngine}
+            disabled={!carRaceState?.isStarted || false}
           >
             B
           </button>
