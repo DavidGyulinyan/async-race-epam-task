@@ -116,6 +116,18 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
     setSelectedColor(car.color);
   }, [car.color]);
 
+  // Reset visual position when race is reset
+  useEffect(() => {
+    if (carRaceState?.position === 0 && !carRaceState?.isDriving) {
+      setCurrentPosition(0);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      startTimeRef.current = null;
+    }
+  }, [carRaceState?.position, carRaceState?.isDriving]);
+
   useEffect(() => {
     if (carRaceState?.isStarted && !carRaceState?.isDriving) {
       handleStartDriving();
@@ -270,3 +282,4 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
 };
 
 export default Car;
+
