@@ -4,6 +4,7 @@ import {
   fetchCars,
   createCar,
   updateCar,
+  deleteCar,
   generateRandomCars,
   selectCars,
   selectTotalCars,
@@ -287,6 +288,7 @@ const Garage: React.FC = () => {
                 key={car.id}
                 car={car}
                 onSelect={handleSelectCar}
+                onDelete={(id) => dispatch(deleteCar({ id, page: currentPage, limit: PAGINATION.GARAGE_CARS_PER_PAGE }))}
                 isSelected={selectedCar?.id === car.id}
               />
             ))

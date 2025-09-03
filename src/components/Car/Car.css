@@ -183,10 +183,6 @@
   border-radius: 4px;
 }
 
-.car-item__car--driving {
-  /* Animation is now handled by JavaScript */
-}
-
 .car-item__car--finished {
   animation: bounce 0.6s ease-in-out;
   filter: drop-shadow(4px 4px 12px rgba(76, 175, 80, 0.6));

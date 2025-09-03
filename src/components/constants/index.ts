@@ -12,8 +12,8 @@ export const PAGINATION = {
 } as const;
 
 export const RACE = {
-  TRACK_WIDTH: 500000, // Distance in pixels that cars need to travel
-  ANIMATION_DURATION_BASE: 1000, // Base animation duration in ms
+  TRACK_WIDTH: 500000,
+  ANIMATION_DURATION_BASE: 100,
 } as const;
 
 export const CAR_BRANDS = [
