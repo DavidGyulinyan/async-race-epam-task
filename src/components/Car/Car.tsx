@@ -8,17 +8,18 @@ import {
   updateCarPosition,
   finishCar
 } from '../../store/raceSlice';
-import { deleteCar, updateCar } from '../../store/carsSlice';
+import { updateCar } from '../../store/carsSlice';
 import { Car as CarType } from '../../types';
 import './Car.css';
 
 interface CarProps {
   car: CarType;
   onSelect: (car: CarType) => void;
+  onDelete: (id: number) => void;
   isSelected: boolean;
 }
 
-const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
+const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
   const dispatch = useAppDispatch();
   const carRaceState = useAppSelector(selectCarRaceState(car.id));
   const [animationDuration, setAnimationDuration] = useState<number>(0);
@@ -36,9 +37,9 @@ const Car: React.FC<CarProps> = ({ car, onSelect, isSelected }) => {
     onSelect(car);
   };
 
-  const handleRemove = async () => {
+  const handleRemove = () => {
     try {
-      await dispatch(deleteCar(car.id)).unwrap();
+      onDelete(car.id);
     } catch (error) {
       console.error('Failed to delete car:', error);
     }

@@ -48,9 +48,10 @@ export const updateCar = createAsyncThunk(
 
 export const deleteCar = createAsyncThunk(
   'cars/deleteCar',
-  async (id: number) => {
+  async ({ id, page, limit }: { id: number; page: number; limit: number }) => {
     await apiService.deleteCar(id);
-    return id;
+    const response = await apiService.getCars({ page, limit });
+    return { id, data: response.data, totalCount: response.totalCount };
   },
 );
 
@@ -122,9 +123,9 @@ const carsSlice = createSlice({
       })
       // Delete car
       .addCase(deleteCar.fulfilled, (state, action) => {
-        state.cars = state.cars.filter(car => car.id !== action.payload);
-        state.totalCount -= 1;
-        if (state.selectedCar?.id === action.payload) {
+        state.cars = action.payload.data;
+        state.totalCount = action.payload.totalCount || 0;
+        if (state.selectedCar?.id === action.payload.id) {
           state.selectedCar = null;
         }
       })
