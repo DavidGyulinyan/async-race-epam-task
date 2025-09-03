@@ -24,7 +24,6 @@ import {
   selectRaceCars,
   initializeCar,
 } from "../../store/raceSlice";
-import { saveWinnerResult } from "../../store/winnersSlice";
 import { RaceStatus, Car as CarType } from "../../types";
 import { PAGINATION } from "../../components/constants";
 import Car from "../../components/Car/Car";
@@ -72,14 +71,6 @@ const Garage: React.FC = () => {
     }
   }, [selectedCar]);
 
-  // Handle race winner
-  useEffect(() => {
-    if (raceWinner && raceStatus === RaceStatus.FINISHED) {
-      // Save winner to database
-      const raceTime = Math.random() * 10 + 5; // Placeholder for actual race time
-      dispatch(saveWinnerResult({ carId: raceWinner.id, time: raceTime }));
-    }
-  }, [raceWinner, raceStatus, dispatch]);
 
   const handleCreateCar = async () => {
     if (!createCarName.trim()) return;
