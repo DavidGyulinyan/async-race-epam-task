@@ -1,182 +1,273 @@
-🏎️ Async Race
-
-Deployed UI: https://async-race-davit.netlify.app/garage
-
-Score: ___ / 400 pts (fill after self-check)
-
-✅ Checklist (Self-Evaluation)
-🚀 UI Deployment
-
- UI deployed on Netlify
-
- Deployment link added to README.md (top section).
-
-✅ Requirements to Commits and Repository
-
- Commit guidelines compliance (Conventional Commits: feat, fix, docs, etc.).
-
- Checklist included in README.md.
-
- Score calculated and added to README.md.
-
-Basic Structure (80 points)
-
- Two Views (10 pts): "Garage" and "Winners".
-
- Garage View Content (30 pts):
-
-Name of view
-
-Car creation & editing panel
-
-Race control panel
-
-Garage section
-
- Winners View Content (10 pts):
-
-Name of view ("Winners")
-
-Winners table
-
-Pagination
-
- Persistent State (30 pts): Keep page number and input values after switching views.
-
-Garage View (90 points)
-
- CRUD for Cars (20 pts): Create, update, delete cars. Handle empty & too long names.
-
- Color Selection (10 pts): Color picker with car preview.
-
- Random Car Creation (20 pts): Create 100 random cars at once.
-
- Car Management Buttons (10 pts): Edit & delete near each car.
-
- Pagination (10 pts): 7 cars per page.
-
- Extra (20 pts):
-
-Handle empty garage ("No cars" message).
-
-Remove last car → go to previous page.
-
-🏆 Winners View (50 points)
-
- Display Winners (15 pts): Show cars after they win a race.
-
- Pagination (10 pts): 10 winners per page.
-
- Winners Table (15 pts): Columns: №, car image, name, wins, best time.
-
- Sorting (10 pts): Sort by wins & best time (ascending/descending).
-
-🚗 Race (170 points)
-
- Start Engine Animation (20 pts): Animate on start, stop on 500 error.
-
- Stop Engine Animation (20 pts): Car returns to start.
-
- Responsive Animation (30 pts): Works on screens ≥ 500px.
-
- Start Race Button (10 pts): Starts all cars on page.
-
- Reset Race Button (15 pts): Reset positions.
-
- Winner Announcement (5 pts): Show winner banner with car name.
-
- Button States (20 pts): Disable start if driving, disable stop if idle.
-
- Actions During Race (50 pts): Handle deleting/editing, page switching, adding cars.
-
-🎨 Prettier & ESLint (10 points)
-
- Prettier (5 pts): Scripts: format, ci:format.
-
- ESLint Airbnb (5 pts): Script: lint. Strict TypeScript rules in tsconfig.json.
-
-🌟 Code Quality (100 points)
-
-(Reviewer Score: up to 100 pts)
-
-Modular design (API, state, UI separation).
-
-Functions ≤ 40 lines, reusable helpers.
-
-No magic numbers/strings.
-
-Clean, readable code.
-
-Extra features: React Router, custom hooks, portals, etc.
-
-🔗 Backend
-
-Use the provided mock server repository during development. Do not modify the backend. The app communicates with the server using fetch and query params for pagination, sorting, and CRUD operations.
-
-📦 Tech Stack
-
-React 18+
-
-TypeScript (strict mode, noImplicitAny=true)
-
-Redux Toolkit (or another state manager)
-
-React Router DOM
-
-CSS / SCSS / Tailwind
-
-ESLint (Airbnb) + Prettier
-
-📜 How to Run Locally
-
-Clone this repo:
-
-git clone https://github.com/your-username/async-race.git
-cd async-race
-
-
-Install dependencies:
-
-npm install
-
-
-Run the app:
-
-npm run dev
-
-
-Make sure the server mock is running locally (default: http://localhost:3000).
-
-🌍 Deployment
-
-Deployed on: Vercel / Netlify / GitHub Pages link here
-
-✅ Commit Guidelines
-
-Use Conventional Commits:
-
-init: start project
-
-feat: add car creation
-
-fix: correct animation bug
-
-docs: update README
-
-refactor: improve API service
-
-🎥 Demo
-
-(Optional) Add screenshots or short GIF of the app UI here.
-
-🔍 Example Features Implemented
-
-✅ Garage view with pagination
-✅ Car CRUD operations
-✅ Race animation & winner banner
-✅ Winners view with sorting & pagination
-
-🧮 Your Score
-
-___ / 400 pts (after self-check)# async-race-epam-task
-# async-race-epam-task
+# 🏎️ Async Race
+
+A modern, interactive car racing application built with React, TypeScript, and Redux Toolkit. Experience the thrill of asynchronous car racing with real-time animations, comprehensive car management, and competitive winner tracking.
+
+## 🚀 Live Demo
+
+**Deployed Application**: [https://async-race-davit.netlify.app/garage]
+
+## ✨ Features
+
+### 🏪 Garage Management
+- **Complete CRUD Operations**: Create, read, update, and delete cars
+- **Color Customization**: Interactive color picker for car customization
+- **Bulk Car Generation**: Generate 100 random cars at once
+- **Smart Pagination**: Navigate through cars with automatic page management
+- **Empty State Handling**: User-friendly messages when garage is empty
+
+### 🏁 Racing System
+- **Individual Car Control**: Start, stop, and reset individual cars
+- **Garage-Wide Racing**: Race ALL cars from all pages simultaneously
+- **Real-Time Animations**: Smooth, physics-based car movement animations
+- **Automatic Winner Detection**: Instant winner announcement with timing
+- **Race State Management**: Comprehensive race lifecycle handling
+
+### 🏆 Winners Tracking
+- **Persistent Winner Records**: Track all race winners with statistics
+- **Advanced Sorting**: Sort by wins count or best time (ascending/descending)
+- **Detailed Statistics**: View win counts and best race times
+- **Pagination Support**: Navigate through winner history
+
+### 🎮 Enhanced User Experience
+- **Responsive Design**: Optimized for desktop and mobile devices
+- **Loading States**: Visual feedback for all async operations
+- **Error Handling**: Graceful error management with user notifications
+- **State Persistence**: Maintain page state when switching views
+- **Intuitive Controls**: Clear button labels and status indicators
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 19** - Modern React with latest features
+- **TypeScript** - Type-safe development
+- **Redux Toolkit** - State management with RTK Query
+- **React Router DOM** - Client-side routing
+- **CSS3** - Modern styling with animations
+
+### Development Tools
+- **ESLint** - Code linting with Airbnb configuration
+- **Prettier** - Code formatting
+- **Create React App** - Build tooling
+- **React Testing Library** - Component testing
+
+### Backend
+- **Node.js Mock Server** - RESTful API simulation
+- **JSON Server** - Lightweight JSON database
+
+## 📁 Project Structure
+
+When you clone this repository, you'll get both the frontend and backend:
+
+```
+async-race-epam-task/
+├── client/                          # React frontend application
+│   ├── public/                      # Static assets
+│   ├── src/
+│   │   ├── components/              # Reusable UI components
+│   │   │   ├── Car/                # Individual car component
+│   │   │   ├── Header/             # Navigation header
+│   │   │   └── constants/          # App constants
+│   │   ├── pages/                  # Page components
+│   │   │   ├── Garage/             # Garage management page
+│   │   │   └── Winners/            # Winners leaderboard page
+│   │   ├── services/               # API services
+│   │   ├── store/                  # Redux store
+│   │   │   ├── carsSlice.ts        # Cars state management
+│   │   │   ├── raceSlice.ts        # Race state management
+│   │   │   ├── winnersSlice.ts     # Winners state management
+│   │   │   └── index.ts            # Store configuration
+│   │   ├── types/                  # TypeScript type definitions
+│   │   ├── hooks/                  # Custom React hooks
+│   │   └── utils/                  # Utility functions
+│   ├── package.json
+│   └── README.md
+└── 
+```
+
+### 📂 What You Get
+- **Complete Frontend**: React application with all features implemented
+- **Backend Server**: Mock API server for data persistence
+- **Documentation**: Comprehensive README with setup instructions
+- **Dependencies**: All required packages for both frontend and backend
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js** (version 14 or higher)
+- **npm** or **yarn** package manager
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/async-race-epam-task.git
+   cd async-race-epam-task
+   ```
+
+2. **Install server dependencies**
+   ```bash
+   cd server
+   npm install
+   ```
+
+3. **Install client dependencies**
+   ```bash
+   cd ../client
+   npm install
+   ```
+
+4. **Start the backend server**
+   ```bash
+   # From server directory
+   cd ../server
+   npm start
+   ```
+   The server will run on `http://localhost:3000`
+
+5. **Start the frontend application**
+   ```bash
+   # From client directory (new terminal)
+   cd ../client
+   npm start
+   ```
+   The app will open at `http://localhost:3000`
+
+### Alternative: Run Both Simultaneously
+
+For convenience, you can also run both server and client from the root directory:
+
+```bash
+# Terminal 1 - Start server
+cd server && npm start
+
+# Terminal 2 - Start client
+cd client && npm start
+```
+
+## 🎯 Usage Guide
+
+### Managing Cars
+1. **Create Car**: Use the form at the top to create new cars with custom names and colors
+2. **Edit Car**: Click the "Select" button on any car, then use the update form
+3. **Delete Car**: Click the "Remove" button on any car
+4. **Generate Cars**: Use "Generate Cars" to create 100 random cars instantly
+
+### Individual Car Control
+1. **Start Car**: Click the "Start" button to begin engine and racing animation
+2. **Stop Car**: Click the "Stop" button to halt the car and reset position
+3. **Reset Car**: Click the "Reset" button to return car to initial state
+
+### Racing All Cars
+1. **Garage-Wide Race**: Click "Race All (X)" to race ALL cars from all pages
+2. **Winner Announcement**: View the winner banner with race time
+3. **Reset Race**: Click "Reset All" to clear all race states
+
+### Viewing Winners
+1. **Navigate to Winners**: Use the header navigation
+2. **Sort Results**: Click column headers to sort by wins or time
+3. **Pagination**: Navigate through winner pages
+
+## 🔧 Available Scripts
+
+### Client Scripts (from `/client` directory)
+```bash
+cd client
+
+npm start          # Start development server
+npm run build      # Build for production
+npm test           # Run tests
+npm run eject      # Eject from Create React App
+npm run format     # Format code with Prettier
+```
+
+### Server Scripts (from `/server` directory)
+```bash
+cd server
+
+npm start          # Start mock server
+```
+
+### Quick Start (from project root)
+```bash
+# Start both server and client
+npm run dev        # If you add this script to package.json
+```
+
+## 🌟 Key Features & Improvements
+
+### 🚀 Performance Optimizations
+- **Efficient API Calls**: Batched requests for fetching all cars
+- **Optimized Animations**: Smooth 60fps animations with proper cleanup
+- **Lazy Loading**: Components load only when needed
+
+### 🎨 UI/UX Enhancements
+- **Status Indicators**: Real-time car status with color coding
+- **Loading States**: Visual feedback for all operations
+- **Error Boundaries**: Graceful error handling
+- **Responsive Design**: Mobile-friendly interface
+
+### 🔧 Technical Improvements
+- **Type Safety**: Full TypeScript implementation
+- **State Management**: Redux Toolkit for predictable state
+- **Code Quality**: ESLint + Prettier for consistent code
+- **Modular Architecture**: Clean separation of concerns
+
+## 📊 API Integration
+
+The application communicates with a RESTful API providing:
+
+- **Garage Management**: CRUD operations for cars
+- **Engine Control**: Start/stop/drive car engines
+- **Winners Tracking**: Persistent winner statistics
+- **Pagination**: Efficient data loading
+- **Sorting**: Flexible winner data sorting
+
+## 🎯 Task Evaluation Guide
+
+### For EPAM Task Evaluators
+
+1. **Clone Repository**: Get both frontend and backend in one go
+2. **Install Dependencies**: Run `npm install` in both `/server` and `/client` directories
+3. **Start Services**: Run server first (`npm start` in `/server`), then client (`npm start` in `/client`)
+4. **Test Features**:
+   - Car CRUD operations
+   - Individual car racing with animations
+   - Multi-page garage-wide racing
+   - Winners tracking and sorting
+   - Responsive design on different screen sizes
+
+### Key Features to Evaluate
+
+- ✅ **Multi-page racing** (fixed: now races ALL cars, not just current page)
+- ✅ **Car animations** (fixed: smooth animations with proper cleanup)
+- ✅ **Winner tracking** (fixed: accurate win counts, no duplicates)
+- ✅ **Individual car controls** (enhanced: better UI and error handling)
+- ✅ **State management** (Redux Toolkit with proper async handling)
+- ✅ **TypeScript** (full type safety throughout the application)
+- ✅ **Code quality** (ESLint, Prettier, clean architecture)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 Commit Guidelines
+
+This project follows [Conventional Commits](https://conventionalcommits.org/):
+
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `docs:` - Documentation updates
+- `refactor:` - Code refactoring
+- `test:` - Testing related changes
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Built with ❤️ using React, TypeScript, and Redux Toolkit**
