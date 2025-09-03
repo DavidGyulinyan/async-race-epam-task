@@ -330,7 +330,7 @@ const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
             onClick={handleStartEngine}
             disabled={carRaceState?.isStarted || isStarting || false}
           >
-            {isStarting ? 'Starting...' : 'A'}
+            A
           </button>
           {carRaceState?.isStarted && !carRaceState?.isDriving && (
             <button
@@ -346,7 +346,7 @@ const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
             onClick={handleStopEngine}
             disabled={!carRaceState?.isStarted || isStopping || false}
           >
-            {isStopping ? 'Stopping...' : 'B'}
+            B
           </button>
           <button
             className={`car-item__btn car-item__btn--reset ${isResetting ? 'car-item__btn--loading' : ''}`}
