@@ -147,8 +147,22 @@ const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
+      startTimeRef.current = null;
     }
   }, [carRaceState?.time, carRaceState?.isStarted]);
+
+  // Reset local state when race is reset
+  useEffect(() => {
+    if (!carRaceState?.isStarted && !carRaceState?.isDriving && !carRaceState?.isFinished && carRaceState?.position === 0) {
+      setCurrentPosition(0);
+      setAnimationDuration(0);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      startTimeRef.current = null;
+    }
+  }, [carRaceState?.isStarted, carRaceState?.isDriving, carRaceState?.isFinished, carRaceState?.position]);
 
   useEffect(() => {
     if (carRaceState?.isDriving && !carRaceState?.isStopped) {
@@ -190,6 +204,7 @@ const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
+      startTimeRef.current = null;
     };
   }, [carRaceState?.isDriving, carRaceState?.isStopped, animationDuration, dispatch, car.id, carRaceState?.position]);
 
