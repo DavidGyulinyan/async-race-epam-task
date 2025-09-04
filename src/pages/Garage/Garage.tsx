@@ -274,15 +274,22 @@ const Garage: React.FC = () => {
               No cars in garage. Create some cars to start racing!
             </div>
           ) : (
-            cars.map((car) => (
-              <Car
-                key={car.id}
-                car={car}
-                onSelect={handleSelectCar}
-                onDelete={(id) => dispatch(deleteCar({ id, page: currentPage, limit: PAGINATION.GARAGE_CARS_PER_PAGE }))}
-                isSelected={selectedCar?.id === car.id}
-              />
-            ))
+            cars.map((car) => {
+              const isAnyCarStillRacing = Object.values(raceCars).some(carState =>
+                carState?.isDriving && !carState?.isFinished
+              );
+
+              return (
+                <Car
+                  key={car.id}
+                  car={car}
+                  onSelect={handleSelectCar}
+                  onDelete={(id) => dispatch(deleteCar({ id, page: currentPage, limit: PAGINATION.GARAGE_CARS_PER_PAGE }))}
+                  isSelected={selectedCar?.id === car.id}
+                  isRaceOngoing={isAnyCarStillRacing}
+                />
+              );
+            })
           )}
         </div>
 
