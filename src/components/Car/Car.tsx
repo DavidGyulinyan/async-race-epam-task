@@ -17,9 +17,10 @@ interface CarProps {
   onSelect: (car: CarType) => void;
   onDelete: (id: number) => void;
   isSelected: boolean;
+  isRaceOngoing: boolean;
 }
 
-const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
+const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected, isRaceOngoing }) => {
   const dispatch = useAppDispatch();
   const carRaceState = useAppSelector(selectCarRaceState(car.id));
   const [animationDuration, setAnimationDuration] = useState<number>(0);
@@ -316,6 +317,8 @@ const Car: React.FC<CarProps> = ({ car, onSelect, onDelete, isSelected }) => {
         <button
           className="car-item__btn car-item__btn--remove"
           onClick={handleRemove}
+          disabled={isRaceOngoing}
+          title={isRaceOngoing ? "Cannot remove car while any car is still racing" : "Remove car"}
         >
           Remove
         </button>
