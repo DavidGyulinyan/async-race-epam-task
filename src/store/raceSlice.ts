@@ -190,6 +190,8 @@ const raceSlice = createSlice({
           car.isStarted = true;
           car.velocity = velocity;
           car.distance = distance;
+          car.isStopped = false; // Reset stopped flag when starting engine
+          car.isFinished = false; // Reset finished flag for new attempt
           // Calculate animation time for the car
           car.time = (distance / velocity) / 1000; // Convert to seconds
         }
