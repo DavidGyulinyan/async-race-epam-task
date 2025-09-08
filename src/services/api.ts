@@ -18,10 +18,7 @@ class ApiService {
     this.baseUrl = baseUrl;
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {},
-  ): Promise<ApiResponse<T>> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
     const url = `${this.baseUrl}${endpoint}`;
     const response = await fetch(url, {
       headers: {
@@ -79,7 +76,10 @@ class ApiService {
   }
 
   // Engine API methods
-  async startStopEngine(id: number, status: EngineStatus.STARTED | EngineStatus.STOPPED): Promise<ApiResponse<EngineResponse>> {
+  async startStopEngine(
+    id: number,
+    status: EngineStatus.STARTED | EngineStatus.STOPPED
+  ): Promise<ApiResponse<EngineResponse>> {
     const queryParams = new URLSearchParams({
       id: id.toString(),
       status,

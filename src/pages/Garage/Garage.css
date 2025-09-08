@@ -44,7 +44,7 @@
 }
 
 .garage__winner-banner {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
   color: #333;
   padding: 1.5rem;
   border-radius: 15px;
@@ -142,27 +142,27 @@
 }
 
 .garage__btn--create {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
 .garage__btn--update {
-  background: #2196F3;
+  background: #2196f3;
   color: white;
 }
 
 .garage__btn--race {
-  background: #FF5722;
+  background: #ff5722;
   color: white;
 }
 
 .garage__btn--reset {
-  background: #9E9E9E;
+  background: #9e9e9e;
   color: white;
 }
 
 .garage__btn--generate {
-  background: #9C27B0;
+  background: #9c27b0;
   color: white;
 }
 
@@ -172,17 +172,17 @@
 }
 
 .garage__btn--select {
-  background: #FFC107;
+  background: #ffc107;
   color: #333;
 }
 
 .garage__btn--remove {
-  background: #F44336;
+  background: #f44336;
   color: white;
 }
 
 .garage__btn--start {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   width: 40px;
   height: 40px;
@@ -194,7 +194,7 @@
 }
 
 .garage__btn--stop {
-  background: #F44336;
+  background: #f44336;
   color: white;
   width: 40px;
   height: 40px;

@@ -26,19 +26,11 @@ const initialState: WinnersState = {
 // Async thunks
 export const fetchWinners = createAsyncThunk(
   'winners/fetchWinners',
-  async (params: {
-    page?: number;
-    limit?: number;
-    sort?: WinnersSortBy;
-    order?: SortOrder;
-  }) => {
-    const [winnersResponse, carsResponse] = await Promise.all([
-      apiService.getWinners(params),
-      apiService.getCars(),
-    ]);
+  async (params: { page?: number; limit?: number; sort?: WinnersSortBy; order?: SortOrder }) => {
+    const [winnersResponse, carsResponse] = await Promise.all([apiService.getWinners(params), apiService.getCars()]);
 
-    const winnersWithCars: WinnerWithCar[] = winnersResponse.data.map(winner => {
-      const car = carsResponse.data.find(c => c.id === winner.id);
+    const winnersWithCars: WinnerWithCar[] = winnersResponse.data.map((winner) => {
+      const car = carsResponse.data.find((c) => c.id === winner.id);
       return {
         ...winner,
         car: car || { id: winner.id, name: 'Unknown', color: '#000000' },
@@ -49,42 +41,36 @@ export const fetchWinners = createAsyncThunk(
       data: winnersWithCars,
       totalCount: winnersResponse.totalCount,
     };
-  },
+  }
 );
 
-export const createWinner = createAsyncThunk(
-  'winners/createWinner',
-  async (winner: Winner) => {
-    const response = await apiService.createWinner(winner);
-    const carResponse = await apiService.getCar(winner.id);
-    
-    return {
-      ...response.data,
-      car: carResponse.data,
-    };
-  },
-);
+export const createWinner = createAsyncThunk('winners/createWinner', async (winner: Winner) => {
+  const response = await apiService.createWinner(winner);
+  const carResponse = await apiService.getCar(winner.id);
+
+  return {
+    ...response.data,
+    car: carResponse.data,
+  };
+});
 
 export const updateWinner = createAsyncThunk(
   'winners/updateWinner',
   async ({ id, winner }: { id: number; winner: Omit<Winner, 'id'> }) => {
     const response = await apiService.updateWinner(id, winner);
     const carResponse = await apiService.getCar(id);
-    
+
     return {
       ...response.data,
       car: carResponse.data,
     };
-  },
+  }
 );
 
-export const deleteWinner = createAsyncThunk(
-  'winners/deleteWinner',
-  async (id: number) => {
-    await apiService.deleteWinner(id);
-    return id;
-  },
-);
+export const deleteWinner = createAsyncThunk('winners/deleteWinner', async (id: number) => {
+  await apiService.deleteWinner(id);
+  return id;
+});
 
 export const saveWinnerResult = createAsyncThunk(
   'winners/saveWinnerResult',
@@ -92,16 +78,16 @@ export const saveWinnerResult = createAsyncThunk(
     try {
       // Try to get existing winner
       const existingWinner = await apiService.getWinner(carId);
-      
+
       // Update existing winner
       const updatedWinner = {
         wins: existingWinner.data.wins + 1,
         time: Math.min(existingWinner.data.time, time),
       };
-      
+
       const response = await apiService.updateWinner(carId, updatedWinner);
       const carResponse = await apiService.getCar(carId);
-      
+
       return {
         ...response.data,
         car: carResponse.data,
@@ -113,16 +99,16 @@ export const saveWinnerResult = createAsyncThunk(
         wins: 1,
         time,
       };
-      
+
       const response = await apiService.createWinner(newWinner);
       const carResponse = await apiService.getCar(carId);
-      
+
       return {
         ...response.data,
         car: carResponse.data,
       };
     }
-  },
+  }
 );
 
 const winnersSlice = createSlice({
@@ -168,19 +154,19 @@ const winnersSlice = createSlice({
       })
       // Update winner
       .addCase(updateWinner.fulfilled, (state, action) => {
-        const index = state.winners.findIndex(winner => winner.id === action.payload.id);
+        const index = state.winners.findIndex((winner) => winner.id === action.payload.id);
         if (index !== -1) {
           state.winners[index] = action.payload;
         }
       })
       // Delete winner
       .addCase(deleteWinner.fulfilled, (state, action) => {
-        state.winners = state.winners.filter(winner => winner.id !== action.payload);
+        state.winners = state.winners.filter((winner) => winner.id !== action.payload);
         state.totalCount -= 1;
       })
       // Save winner result
       .addCase(saveWinnerResult.fulfilled, (state, action) => {
-        const index = state.winners.findIndex(winner => winner.id === action.payload.id);
+        const index = state.winners.findIndex((winner) => winner.id === action.payload.id);
         if (index !== -1) {
           state.winners[index] = action.payload;
         } else {
@@ -191,13 +177,7 @@ const winnersSlice = createSlice({
   },
 });
 
-export const { 
-  setCurrentPage, 
-  setSortBy, 
-  setSortOrder, 
-  toggleSortOrder, 
-  clearError 
-} = winnersSlice.actions;
+export const { setCurrentPage, setSortBy, setSortOrder, toggleSortOrder, clearError } = winnersSlice.actions;
 
 // Selectors
 export const selectWinners = (state: { winners: WinnersState }) => state.winners.winners;
@@ -207,7 +187,7 @@ export const selectWinnersSortBy = (state: { winners: WinnersState }) => state.w
 export const selectWinnersSortOrder = (state: { winners: WinnersState }) => state.winners.sortOrder;
 export const selectWinnersLoading = (state: { winners: WinnersState }) => state.winners.isLoading;
 export const selectWinnersError = (state: { winners: WinnersState }) => state.winners.error;
-export const selectWinnersTotalPages = (state: { winners: WinnersState }) => 
+export const selectWinnersTotalPages = (state: { winners: WinnersState }) =>
   Math.ceil(state.winners.totalCount / PAGINATION.WINNERS_PER_PAGE);
 
 export default winnersSlice.reducer;
