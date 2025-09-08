@@ -22,28 +22,22 @@ const initialState: CarsState = {
 };
 
 // Async thunks
-export const fetchCars = createAsyncThunk(
-  'cars/fetchCars',
-  async (params: PaginationParams) => {
-    const response = await apiService.getCars(params);
-    return response;
-  },
-);
+export const fetchCars = createAsyncThunk('cars/fetchCars', async (params: PaginationParams) => {
+  const response = await apiService.getCars(params);
+  return response;
+});
 
-export const createCar = createAsyncThunk(
-  'cars/createCar',
-  async (car: Omit<Car, 'id'>) => {
-    const response = await apiService.createCar(car);
-    return response.data;
-  },
-);
+export const createCar = createAsyncThunk('cars/createCar', async (car: Omit<Car, 'id'>) => {
+  const response = await apiService.createCar(car);
+  return response.data;
+});
 
 export const updateCar = createAsyncThunk(
   'cars/updateCar',
   async ({ id, car }: { id: number; car: Omit<Car, 'id'> }) => {
     const response = await apiService.updateCar(id, car);
     return response.data;
-  },
+  }
 );
 
 export const deleteCar = createAsyncThunk(
@@ -52,29 +46,26 @@ export const deleteCar = createAsyncThunk(
     await apiService.deleteCar(id);
     const response = await apiService.getCars({ page, limit });
     return { id, data: response.data, totalCount: response.totalCount };
-  },
+  }
 );
 
-export const generateRandomCars = createAsyncThunk(
-  'cars/generateRandomCars',
-  async (count: number) => {
-    const { CAR_BRANDS, CAR_MODELS, COLORS } = await import('../components/constants');
-    
-    const promises = Array.from({ length: count }, () => {
-      const brand = CAR_BRANDS[Math.floor(Math.random() * CAR_BRANDS.length)];
-      const model = CAR_MODELS[Math.floor(Math.random() * CAR_MODELS.length)];
-      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-      
-      return apiService.createCar({
-        name: `${brand} ${model}`,
-        color,
-      });
+export const generateRandomCars = createAsyncThunk('cars/generateRandomCars', async (count: number) => {
+  const { CAR_BRANDS, CAR_MODELS, COLORS } = await import('../components/constants');
+
+  const promises = Array.from({ length: count }, () => {
+    const brand = CAR_BRANDS[Math.floor(Math.random() * CAR_BRANDS.length)];
+    const model = CAR_MODELS[Math.floor(Math.random() * CAR_MODELS.length)];
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+
+    return apiService.createCar({
+      name: `${brand} ${model}`,
+      color,
     });
+  });
 
-    const responses = await Promise.all(promises);
-    return responses.map(response => response.data);
-  },
-);
+  const responses = await Promise.all(promises);
+  return responses.map((response) => response.data);
+});
 
 const carsSlice = createSlice({
   name: 'cars',
@@ -113,7 +104,7 @@ const carsSlice = createSlice({
       })
       // Update car
       .addCase(updateCar.fulfilled, (state, action) => {
-        const index = state.cars.findIndex(car => car.id === action.payload.id);
+        const index = state.cars.findIndex((car) => car.id === action.payload.id);
         if (index !== -1) {
           state.cars[index] = action.payload;
         }
@@ -146,7 +137,7 @@ export const selectCurrentPage = (state: { cars: CarsState }) => state.cars.curr
 export const selectCarsLoading = (state: { cars: CarsState }) => state.cars.isLoading;
 export const selectCarsError = (state: { cars: CarsState }) => state.cars.error;
 export const selectSelectedCar = (state: { cars: CarsState }) => state.cars.selectedCar;
-export const selectTotalPages = (state: { cars: CarsState }) => 
+export const selectTotalPages = (state: { cars: CarsState }) =>
   Math.ceil(state.cars.totalCount / PAGINATION.GARAGE_CARS_PER_PAGE);
 
 export default carsSlice.reducer;

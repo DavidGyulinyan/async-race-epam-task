@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   fetchCars,
   createCar,
@@ -14,7 +14,7 @@ import {
   selectSelectedCar,
   setSelectedCar,
   setCurrentPage,
-} from "../../store/carsSlice";
+} from '../../store/carsSlice';
 import {
   startRace,
   resetRace,
@@ -23,11 +23,11 @@ import {
   selectRaceTime,
   selectRaceCars,
   initializeCar,
-} from "../../store/raceSlice";
-import { RaceStatus, Car as CarType } from "../../types";
-import { PAGINATION } from "../../components/constants";
-import Car from "../../components/Car/Car";
-import "./Garage.css";
+} from '../../store/raceSlice';
+import { RaceStatus, Car as CarType } from '../../types';
+import { PAGINATION } from '../../components/constants';
+import Car from '../../components/Car/Car';
+import './Garage.css';
 
 const Garage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,10 +42,10 @@ const Garage: React.FC = () => {
   const raceTime = useAppSelector(selectRaceTime);
   const raceCars = useAppSelector(selectRaceCars);
 
-  const [createCarName, setCreateCarName] = useState("");
-  const [createCarColor, setCreateCarColor] = useState("#ff0000");
-  const [updateCarName, setUpdateCarName] = useState("");
-  const [updateCarColor, setUpdateCarColor] = useState("#ff0000");
+  const [createCarName, setCreateCarName] = useState('');
+  const [createCarColor, setCreateCarColor] = useState('#ff0000');
+  const [updateCarName, setUpdateCarName] = useState('');
+  const [updateCarColor, setUpdateCarColor] = useState('#ff0000');
 
   useEffect(() => {
     dispatch(
@@ -71,7 +71,6 @@ const Garage: React.FC = () => {
     }
   }, [selectedCar]);
 
-
   const handleCreateCar = async () => {
     if (!createCarName.trim()) return;
 
@@ -83,8 +82,8 @@ const Garage: React.FC = () => {
         })
       ).unwrap();
 
-      setCreateCarName("");
-      setCreateCarColor("#ff0000");
+      setCreateCarName('');
+      setCreateCarColor('#ff0000');
 
       // Refresh cars if we're on the current page
       dispatch(
@@ -94,7 +93,7 @@ const Garage: React.FC = () => {
         })
       );
     } catch (error) {
-      console.error("Failed to create car:", error);
+      console.error('Failed to create car:', error);
     }
   };
 
@@ -120,7 +119,7 @@ const Garage: React.FC = () => {
         })
       );
     } catch (error) {
-      console.error("Failed to update car:", error);
+      console.error('Failed to update car:', error);
     }
   };
 
@@ -136,7 +135,7 @@ const Garage: React.FC = () => {
         })
       );
     } catch (error) {
-      console.error("Failed to generate cars:", error);
+      console.error('Failed to generate cars:', error);
     }
   };
 
@@ -146,7 +145,7 @@ const Garage: React.FC = () => {
     try {
       await dispatch(startRace(cars)).unwrap();
     } catch (error) {
-      console.error("Failed to start race:", error);
+      console.error('Failed to start race:', error);
     }
   };
 
@@ -154,7 +153,7 @@ const Garage: React.FC = () => {
     try {
       await dispatch(resetRace(cars)).unwrap();
     } catch (error) {
-      console.error("Failed to reset race:", error);
+      console.error('Failed to reset race:', error);
     }
   };
 
@@ -184,7 +183,7 @@ const Garage: React.FC = () => {
           </div>
         </div>
 
-        {raceWinner && raceStatus === RaceStatus.FINISHED && Object.values(raceCars).every(car => car.isFinished) && (
+        {raceWinner && raceStatus === RaceStatus.FINISHED && Object.values(raceCars).every((car) => car.isFinished) && (
           <div className="garage__winner-banner">
             🏆 Winner: {raceWinner.name} - Time: {raceTime.toFixed(2)} seconds! 🏆
           </div>
@@ -199,7 +198,7 @@ const Garage: React.FC = () => {
                 className="garage__input"
                 value={createCarName}
                 onChange={(e) => setCreateCarName(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleCreateCar()}
+                onKeyPress={(e) => e.key === 'Enter' && handleCreateCar()}
               />
               <input
                 type="color"
@@ -223,7 +222,7 @@ const Garage: React.FC = () => {
                 className="garage__input"
                 value={updateCarName}
                 onChange={(e) => setUpdateCarName(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleUpdateCar()}
+                onKeyPress={(e) => e.key === 'Enter' && handleUpdateCar()}
                 disabled={!selectedCar}
               />
               <input
@@ -249,7 +248,7 @@ const Garage: React.FC = () => {
               onClick={handleStartRace}
               disabled={cars.length === 0 || raceStatus === RaceStatus.RACING}
             >
-              {raceStatus === RaceStatus.RACING ? "Racing..." : "Race"}
+              {raceStatus === RaceStatus.RACING ? 'Racing...' : 'Race'}
             </button>
             <button
               className="garage__btn garage__btn--reset"
@@ -270,13 +269,11 @@ const Garage: React.FC = () => {
 
         <div className="garage__cars">
           {cars.length === 0 ? (
-            <div className="garage__empty">
-              No cars in garage. Create some cars to start racing!
-            </div>
+            <div className="garage__empty">No cars in garage. Create some cars to start racing!</div>
           ) : (
             cars.map((car) => {
-              const isAnyCarStillRacing = Object.values(raceCars).some(carState =>
-                carState?.isDriving && !carState?.isFinished
+              const isAnyCarStillRacing = Object.values(raceCars).some(
+                (carState) => carState?.isDriving && !carState?.isFinished
               );
 
               return (
@@ -284,7 +281,9 @@ const Garage: React.FC = () => {
                   key={car.id}
                   car={car}
                   onSelect={handleSelectCar}
-                  onDelete={(id) => dispatch(deleteCar({ id, page: currentPage, limit: PAGINATION.GARAGE_CARS_PER_PAGE }))}
+                  onDelete={(id) =>
+                    dispatch(deleteCar({ id, page: currentPage, limit: PAGINATION.GARAGE_CARS_PER_PAGE }))
+                  }
                   isSelected={selectedCar?.id === car.id}
                   isRaceOngoing={isAnyCarStillRacing}
                 />

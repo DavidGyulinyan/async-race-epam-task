@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   fetchWinners,
   selectWinners,
@@ -12,10 +12,10 @@ import {
   setCurrentPage,
   setSortBy,
   toggleSortOrder,
-} from "../../store/winnersSlice";
-import { WinnersSortBy, SortOrder } from "../../types";
-import { PAGINATION } from "../../components/constants";
-import "./Winners.css";
+} from '../../store/winnersSlice';
+import { WinnersSortBy, SortOrder } from '../../types';
+import { PAGINATION } from '../../components/constants';
+import './Winners.css';
 
 const Winners: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -51,8 +51,8 @@ const Winners: React.FC = () => {
   };
 
   const getSortIcon = (column: WinnersSortBy) => {
-    if (sortBy !== column) return "↕️";
-    return sortOrder === SortOrder.ASC ? "↑" : "↓";
+    if (sortBy !== column) return '↕️';
+    return sortOrder === SortOrder.ASC ? '↑' : '↓';
   };
 
   if (isLoading) {
@@ -88,16 +88,10 @@ const Winners: React.FC = () => {
                   <th className="winners__th">Number</th>
                   <th className="winners__th">Car</th>
                   <th className="winners__th">Name</th>
-                  <th
-                    className="winners__th winners__th--sortable"
-                    onClick={() => handleSort(WinnersSortBy.WINS)}
-                  >
+                  <th className="winners__th winners__th--sortable" onClick={() => handleSort(WinnersSortBy.WINS)}>
                     Wins {getSortIcon(WinnersSortBy.WINS)}
                   </th>
-                  <th
-                    className="winners__th winners__th--sortable"
-                    onClick={() => handleSort(WinnersSortBy.TIME)}
-                  >
+                  <th className="winners__th winners__th--sortable" onClick={() => handleSort(WinnersSortBy.TIME)}>
                     Best Time (seconds) {getSortIcon(WinnersSortBy.TIME)}
                   </th>
                 </tr>
@@ -105,28 +99,15 @@ const Winners: React.FC = () => {
               <tbody>
                 {winners.map((winner, index) => (
                   <tr key={winner.id} className="winners__tr">
+                    <td className="winners__td">{(currentPage - 1) * PAGINATION.WINNERS_PER_PAGE + index + 1}</td>
                     <td className="winners__td">
-                      {(currentPage - 1) * PAGINATION.WINNERS_PER_PAGE +
-                        index +
-                        1}
-                    </td>
-                    <td className="winners__td">
-                      <div
-                        className="winners__car-icon"
-                        style={{ color: winner.car.color }}
-                      >
+                      <div className="winners__car-icon" style={{ color: winner.car.color }}>
                         🚗
                       </div>
                     </td>
-                    <td className="winners__td winners__td--name">
-                      {winner.car.name}
-                    </td>
-                    <td className="winners__td winners__td--wins">
-                      {winner.wins}
-                    </td>
-                    <td className="winners__td winners__td--time">
-                      {winner.time.toFixed(2)}
-                    </td>
+                    <td className="winners__td winners__td--name">{winner.car.name}</td>
+                    <td className="winners__td winners__td--wins">{winner.wins}</td>
+                    <td className="winners__td winners__td--time">{winner.time.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -161,7 +142,7 @@ const Winners: React.FC = () => {
                   <button
                     key={pageNum}
                     className={`winners__btn winners__btn--page ${
-                      currentPage === pageNum ? "winners__btn--active" : ""
+                      currentPage === pageNum ? 'winners__btn--active' : ''
                     }`}
                     onClick={() => handlePageChange(pageNum)}
                   >

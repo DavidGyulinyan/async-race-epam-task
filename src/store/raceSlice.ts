@@ -34,103 +34,88 @@ const initialState: RaceState = {
 };
 
 // Async thunks
-export const startEngine = createAsyncThunk(
-  'race/startEngine',
-  async (carId: number) => {
-    const response = await apiService.startStopEngine(carId, EngineStatus.STARTED);
-    return {
-      carId,
-      velocity: response.data.velocity,
-      distance: response.data.distance,
-    };
-  },
-);
+export const startEngine = createAsyncThunk('race/startEngine', async (carId: number) => {
+  const response = await apiService.startStopEngine(carId, EngineStatus.STARTED);
+  return {
+    carId,
+    velocity: response.data.velocity,
+    distance: response.data.distance,
+  };
+});
 
-export const stopEngine = createAsyncThunk(
-  'race/stopEngine',
-  async (carId: number) => {
-    await apiService.startStopEngine(carId, EngineStatus.STOPPED);
-    return carId;
-  },
-);
+export const stopEngine = createAsyncThunk('race/stopEngine', async (carId: number) => {
+  await apiService.startStopEngine(carId, EngineStatus.STOPPED);
+  return carId;
+});
 
-export const startDriving = createAsyncThunk(
-  'race/startDriving',
-  async (carId: number) => {
-    await apiService.switchToDriveMode(carId);
-    return {
-      carId,
-      success: true,
-    };
-  },
-);
+export const startDriving = createAsyncThunk('race/startDriving', async (carId: number) => {
+  await apiService.switchToDriveMode(carId);
+  return {
+    carId,
+    success: true,
+  };
+});
 
-export const startRace = createAsyncThunk(
-  'race/startRace',
-  async (cars: Car[], { dispatch }) => {
-    const finishTimes: { car: Car; time: number }[] = [];
+export const startRace = createAsyncThunk('race/startRace', async (cars: Car[], { dispatch }) => {
+  const finishTimes: { car: Car; time: number }[] = [];
 
-    // Start all engines and collect their data
-    const engineResults = await Promise.all(
-      cars.map(async (car) => {
-        const result = await dispatch(startEngine(car.id)).unwrap();
-        return { car, velocity: result.velocity, distance: result.distance };
-      })
-    );
+  // Start all engines and collect their data
+  const engineResults = await Promise.all(
+    cars.map(async (car) => {
+      const result = await dispatch(startEngine(car.id)).unwrap();
+      return { car, velocity: result.velocity, distance: result.distance };
+    })
+  );
 
-    // Start driving for all cars
-    const drivePromises = cars.map(async (car) => {
-      try {
-        await dispatch(startDriving(car.id)).unwrap();
-      } catch (error) {
-        // Car failed to start driving, but we'll still include it with its calculated time
-        console.warn(`Car ${car.id} failed to start driving:`, error);
-      }
-    });
-
-    await Promise.allSettled(drivePromises);
-
-    // Calculate completion times based on engine data
-    engineResults.forEach(({ car, velocity, distance }) => {
-      if (velocity > 0 && distance > 0) {
-        const time = (distance / velocity) / 1000;
-        finishTimes.push({ car, time });
-      }
-    });
-
-    // Find the actual winner (fastest completion time)
-    let winner: Car | null = null;
-    let winnerTime = Infinity;
-
-    finishTimes.forEach(({ car, time }) => {
-      if (time < winnerTime) {
-        winner = car;
-        winnerTime = time;
-      }
-    });
-
-    // Save winner result if there's a winner
-    if (winner && winnerTime !== Infinity) {
-      await dispatch(saveWinnerResult({ carId: (winner as Car).id, time: winnerTime }));
+  // Start driving for all cars
+  const drivePromises = cars.map(async (car) => {
+    try {
+      await dispatch(startDriving(car.id)).unwrap();
+    } catch (error) {
+      // Car failed to start driving, but we'll still include it with its calculated time
+      console.warn(`Car ${car.id} failed to start driving:`, error);
     }
+  });
 
-    return {
-      winner,
-      raceTime: winnerTime === Infinity ? 0 : winnerTime,
-    };
-  },
-);
+  await Promise.allSettled(drivePromises);
 
-export const resetRace = createAsyncThunk(
-  'race/resetRace',
-  async (cars: Car[], { dispatch }) => {
-    // Stop all engines
-    const stopPromises = cars.map(car => dispatch(stopEngine(car.id)));
-    await Promise.all(stopPromises);
-    
-    return cars.map(car => car.id);
-  },
-);
+  // Calculate completion times based on engine data
+  engineResults.forEach(({ car, velocity, distance }) => {
+    if (velocity > 0 && distance > 0) {
+      const time = distance / velocity / 1000;
+      finishTimes.push({ car, time });
+    }
+  });
+
+  // Find the actual winner (fastest completion time)
+  let winner: Car | null = null;
+  let winnerTime = Infinity;
+
+  finishTimes.forEach(({ car, time }) => {
+    if (time < winnerTime) {
+      winner = car;
+      winnerTime = time;
+    }
+  });
+
+  // Save winner result if there's a winner
+  if (winner && winnerTime !== Infinity) {
+    await dispatch(saveWinnerResult({ carId: (winner as Car).id, time: winnerTime }));
+  }
+
+  return {
+    winner,
+    raceTime: winnerTime === Infinity ? 0 : winnerTime,
+  };
+});
+
+export const resetRace = createAsyncThunk('race/resetRace', async (cars: Car[], { dispatch }) => {
+  // Stop all engines
+  const stopPromises = cars.map((car) => dispatch(stopEngine(car.id)));
+  await Promise.all(stopPromises);
+
+  return cars.map((car) => car.id);
+});
 
 const raceSlice = createSlice({
   name: 'race',
@@ -193,7 +178,7 @@ const raceSlice = createSlice({
           car.isStopped = false; // Reset stopped flag when starting engine
           car.isFinished = false; // Reset finished flag for new attempt
           // Calculate animation time for the car
-          car.time = (distance / velocity) / 1000; // Convert to seconds
+          car.time = distance / velocity / 1000; // Convert to seconds
         }
       })
       .addCase(startEngine.rejected, (state, action) => {
@@ -251,8 +236,8 @@ const raceSlice = createSlice({
         state.status = RaceStatus.IDLE;
         state.winner = null;
         state.raceTime = 0;
-        
-        action.payload.forEach(carId => {
+
+        action.payload.forEach((carId) => {
           const car = state.cars[carId];
           if (car) {
             car.isStarted = false;
@@ -268,15 +253,8 @@ const raceSlice = createSlice({
   },
 });
 
-export const {
-  initializeCar,
-  removeCar,
-  setRaceStatus,
-  clearWinner,
-  clearError,
-  updateCarPosition,
-  finishCar
-} = raceSlice.actions;
+export const { initializeCar, removeCar, setRaceStatus, clearWinner, clearError, updateCarPosition, finishCar } =
+  raceSlice.actions;
 
 // Selectors
 export const selectRaceStatus = (state: { race: RaceState }) => state.race.status;
@@ -285,7 +263,6 @@ export const selectRaceWinner = (state: { race: RaceState }) => state.race.winne
 export const selectRaceTime = (state: { race: RaceState }) => state.race.raceTime;
 export const selectRaceLoading = (state: { race: RaceState }) => state.race.isLoading;
 export const selectRaceError = (state: { race: RaceState }) => state.race.error;
-export const selectCarRaceState = (carId: number) => (state: { race: RaceState }) =>
-  state.race.cars[carId];
+export const selectCarRaceState = (carId: number) => (state: { race: RaceState }) => state.race.cars[carId];
 
 export default raceSlice.reducer;
